@@ -17,24 +17,37 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Agricultural Theme Colors */
+    --primary: 125 65% 25%;  /* Deep Forest Green */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 35 45% 55%;  /* Warm Earth Brown */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 120 20% 95%;
+    --muted-foreground: 125 25% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 85% 60%;  /* Golden Harvest */
+    --accent-foreground: 125 65% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 120 15% 90%;
+    --input: 120 15% 92%;
+    --ring: 125 65% 25%;
+
+    /* Custom Agricultural Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(125 65% 25%), hsl(125 55% 35%));
+    --gradient-harvest: linear-gradient(135deg, hsl(125 65% 25%), hsl(45 85% 60%));
+    --gradient-earth: linear-gradient(135deg, hsl(35 45% 55%), hsl(35 55% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(125 65% 25%), hsl(45 85% 60%), hsl(125 45% 45%));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(125 65% 25% / 0.1);
+    --shadow-medium: 0 8px 30px hsl(125 65% 25% / 0.15);
+
+    --radius: 0.5rem;
 
     --radius: 0.5rem;
 
