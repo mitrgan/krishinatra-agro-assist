@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { 
   Wheat, 
   TrendingUp, 
@@ -13,22 +15,23 @@ import heroFarm from "@/assets/hero-farm.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const features = [
     {
       icon: Wheat,
-      title: "Smart Yield Prediction",
-      description: "AI-powered harvest estimation based on real-time conditions"
+      title: t("yield_prediction"),
+      description: t("yield_prediction_desc")
     },
     {
       icon: Shield,
-      title: "Disease Detection",
-      description: "Early identification and treatment recommendations"
+      title: t("disease_detection"),
+      description: t("disease_detection_desc")
     },
     {
       icon: TrendingUp,
-      title: "Profit Analysis",
-      description: "Maximize your returns with data-driven insights"
+      title: t("profit_analysis"),
+      description: t("profit_analysis_desc")
     }
   ];
 
@@ -41,6 +44,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Language Switcher */}
+      <div className="absolute top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div 
@@ -53,10 +61,10 @@ const Index = () => {
         <div className="relative container mx-auto px-4 py-24 text-center">
           <div className="max-w-4xl mx-auto text-white">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              Welcome to <span className="text-accent">Krishinatra</span>
+              {t("welcome")} to <span className="text-accent">Krishinatra</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 opacity-90 leading-relaxed">
-              Your AI-powered farming assistant for smarter agriculture, better yields, and sustainable farming practices
+              {t("welcome_message")}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -66,7 +74,7 @@ const Index = () => {
                 onClick={() => navigate('/dashboard')}
               >
                 <Target className="mr-2 h-5 w-5" />
-                Start Farming Smarter
+                {t("get_started")}
               </Button>
               <Button 
                 size="lg" 
@@ -75,7 +83,7 @@ const Index = () => {
                 onClick={() => navigate('/yield-prediction')}
               >
                 <Zap className="mr-2 h-5 w-5" />
-                Try Yield Prediction
+                {t("yield_prediction")}
               </Button>
             </div>
 
@@ -97,10 +105,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Revolutionize Your Farming
+              {t("revolutionize_farming")}
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Harness the power of AI to make informed decisions, increase productivity, and maximize your profits
+              {t("welcome_message")}
             </p>
           </div>
 
@@ -127,11 +135,10 @@ const Index = () => {
           <div className="bg-gradient-harvest rounded-2xl p-8 md:p-12 text-center shadow-medium">
             <Users className="h-12 w-12 text-white mx-auto mb-6" />
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Join the Agricultural Revolution
+              {t("join_farmers")}
             </h3>
             <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-              Thousands of farmers worldwide trust Krishinatra to optimize their crops, 
-              reduce costs, and increase yields. Start your journey today.
+              {t("welcome_message")}
             </p>
             <Button 
               size="lg" 
@@ -139,7 +146,7 @@ const Index = () => {
               className="text-lg px-8 py-3"
               onClick={() => navigate('/dashboard')}
             >
-              Get Started Free
+              {t("get_started")}
             </Button>
           </div>
         </div>

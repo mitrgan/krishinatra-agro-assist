@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { 
   Wheat, 
   Droplets, 
@@ -12,46 +14,47 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const features = [
     {
-      title: "Yield Prediction",
-      description: "Estimate expected harvest based on crop conditions",
+      title: t("yield_prediction"),
+      description: t("yield_prediction_desc"),
       icon: Wheat,
       path: "/yield-prediction",
       color: "bg-gradient-harvest"
     },
     {
-      title: "Crop Recommendations",
-      description: "Get personalized suggestions for your farm",
+      title: t("recommendations"),
+      description: t("recommendations_desc"),
       icon: Droplets,
       path: "/recommendations",
       color: "bg-gradient-primary"
     },
     {
-      title: "Disease Detection",
-      description: "Identify and treat plant diseases early",
+      title: t("disease_detection"),
+      description: t("disease_detection_desc"),
       icon: Bug,
       path: "/disease-detection",
       color: "bg-gradient-earth"
     },
     {
-      title: "Profit Analysis",
-      description: "Calculate potential profit margins and ROI",
+      title: t("profit_analysis"),
+      description: t("profit_analysis_desc"),
       icon: Calculator,
       path: "/profit-analysis",
       color: "bg-gradient-harvest"
     },
     {
-      title: "Timeline Guidance",
-      description: "Track crop growth and farming activities",
+      title: t("timeline_guidance"),
+      description: t("timeline_guidance_desc"),
       icon: Calendar,
       path: "/timeline",
       color: "bg-gradient-primary"
     },
     {
-      title: "Soil Analysis",
-      description: "Find the best crops for your soil type",
+      title: t("soil_analysis"),
+      description: t("soil_analysis_desc"),
       icon: TestTube,
       path: "/soil-analysis",
       color: "bg-gradient-earth"
@@ -61,12 +64,15 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher />
+        </div>
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Welcome to Krishinatra
+            {t("welcome")} to Krishinatra
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your AI-powered farming assistant for smarter agriculture and better yields
+            {t("welcome_message")}
           </p>
         </div>
 
@@ -93,7 +99,7 @@ const Dashboard = () => {
                     variant="outline" 
                     className="w-full hover:bg-primary hover:text-primary-foreground"
                   >
-                    Get Started
+                    {t("get_started")}
                   </Button>
                 </CardContent>
               </Card>
@@ -103,18 +109,17 @@ const Dashboard = () => {
 
         <div className="bg-gradient-harvest rounded-lg p-8 text-center shadow-soft">
           <h2 className="text-2xl font-bold text-white mb-4">
-            Ready to Revolutionize Your Farming?
+            {t("revolutionize_farming")}
           </h2>
           <p className="text-white/90 mb-6 max-w-2xl mx-auto">
-            Join thousands of farmers who are already using AI to increase their yields, 
-            reduce costs, and make data-driven decisions for their crops.
+            {t("join_farmers")}
           </p>
           <Button 
             variant="secondary" 
             size="lg"
             onClick={() => navigate('/yield-prediction')}
           >
-            Start Your First Analysis
+            {t("start_analysis")}
           </Button>
         </div>
       </div>

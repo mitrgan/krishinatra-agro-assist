@@ -9,6 +9,7 @@ import YieldPrediction from "./pages/YieldPrediction";
 import Recommendations from "./pages/Recommendations";
 import DiseaseDetection from "./pages/DiseaseDetection";
 import NotFound from "./pages/NotFound";
+import "./i18n";
 
 const queryClient = new QueryClient();
 
