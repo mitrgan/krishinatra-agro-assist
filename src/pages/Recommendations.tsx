@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 const Recommendations = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<any>(null);
 
@@ -57,17 +58,17 @@ const Recommendations = () => {
     <div className="min-h-screen bg-muted/30">
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-8">
-          <Button 
+            <Button 
             variant="outline" 
             onClick={() => navigate('/dashboard')}
             className="hover:bg-primary hover:text-primary-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
+            {t('back_to_dashboard')}
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Crop Recommendations</h1>
-            <p className="text-muted-foreground">Get personalized suggestions for optimal farming</p>
+            <h1 className="text-3xl font-bold text-foreground">{t('recommendations')}</h1>
+            <p className="text-muted-foreground">{t('recommendations_desc')}</p>
           </div>
         </div>
 
@@ -76,10 +77,10 @@ const Recommendations = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Droplets className="h-5 w-5 text-primary" />
-                Farm Details
+                {t('farm_details')}
               </CardTitle>
               <CardDescription>
-                Tell us about your current farming situation
+                {t('farm_details_desc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -148,7 +149,7 @@ const Recommendations = () => {
                   className="w-full bg-gradient-primary hover:opacity-90"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Generating..." : "Get Recommendations"}
+                  {isLoading ? t('generating') : t('get_recommendations')}
                 </Button>
               </form>
             </CardContent>

@@ -52,17 +52,17 @@ const YieldPrediction = () => {
     <div className="min-h-screen bg-muted/30">
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-8">
-          <Button 
+            <Button 
             variant="outline" 
             onClick={() => navigate('/dashboard')}
             className="hover:bg-primary hover:text-primary-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
+            {t('back_to_dashboard')}
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Yield Prediction</h1>
-            <p className="text-muted-foreground">Estimate your expected harvest based on current conditions</p>
+            <h1 className="text-3xl font-bold text-foreground">{t('yield_prediction')}</h1>
+            <p className="text-muted-foreground">{t('yield_prediction_desc')}</p>
           </div>
         </div>
 
@@ -71,33 +71,33 @@ const YieldPrediction = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                Crop Information
+                {t('crop_information')}
               </CardTitle>
               <CardDescription>
-                Enter your crop and field details for accurate prediction
+                {t('crop_info_desc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="crop">Crop Type</Label>
+                    <Label htmlFor="crop">{t('crop_type')}</Label>
                     <Select>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select crop" />
+                        <SelectValue placeholder={t('select_crop')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="wheat">Wheat</SelectItem>
-                        <SelectItem value="rice">Rice</SelectItem>
-                        <SelectItem value="corn">Corn</SelectItem>
-                        <SelectItem value="soybeans">Soybeans</SelectItem>
-                        <SelectItem value="cotton">Cotton</SelectItem>
+                        <SelectItem value="wheat">{t('wheat')}</SelectItem>
+                        <SelectItem value="rice">{t('rice')}</SelectItem>
+                        <SelectItem value="corn">{t('corn')}</SelectItem>
+                        <SelectItem value="soybeans">{t('soybeans')}</SelectItem>
+                        <SelectItem value="cotton">{t('cotton')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="area">Field Area (hectares)</Label>
+                    <Label htmlFor="area">{t('field_area')}</Label>
                     <Input id="area" type="number" placeholder="10" />
                   </div>
                 </div>
@@ -133,7 +133,7 @@ const YieldPrediction = () => {
                   className="w-full bg-gradient-harvest hover:opacity-90"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Analyzing..." : "Predict Yield"}
+                  {isLoading ? t('analyzing') : t('predict_yield')}
                 </Button>
               </form>
             </CardContent>

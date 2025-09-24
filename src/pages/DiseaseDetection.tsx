@@ -38,6 +38,7 @@ interface DiseaseAnalysis {
 const DiseaseDetection = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -137,14 +138,14 @@ const DiseaseDetection = () => {
             className="mr-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
+            {t('back_to_dashboard')}
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              AI Disease Detection
+              {t('disease_detection')}
             </h1>
             <p className="text-muted-foreground mt-1">
-              Upload crop images to identify diseases and get treatment recommendations
+              {t('disease_detection_desc')}
             </p>
           </div>
         </div>
@@ -155,10 +156,10 @@ const DiseaseDetection = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Camera className="h-5 w-5" />
-                Upload Crop Image
+                {t('upload_crop_image')}
               </CardTitle>
               <CardDescription>
-                Take a clear photo of the affected plant parts. Best results with good lighting and close-up shots.
+                {t('upload_image_desc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -188,7 +189,7 @@ const DiseaseDetection = () => {
                           disabled={isAnalyzing}
                           className="bg-gradient-primary"
                         >
-                          {isAnalyzing ? "Analyzing..." : "Analyze Disease"}
+                          {isAnalyzing ? t('analyzing') : t('analyze_disease')}
                         </Button>
                       </div>
                     </div>
