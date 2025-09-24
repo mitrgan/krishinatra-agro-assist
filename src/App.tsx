@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import YieldPrediction from "./pages/YieldPrediction";
 import Recommendations from "./pages/Recommendations";
 import DiseaseDetection from "./pages/DiseaseDetection";
+import LanguageSelection from "./pages/LanguageSelection";
 import NotFound from "./pages/NotFound";
 import "./i18n";
 
@@ -21,6 +22,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/language-selection" element={<LanguageSelection />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/yield-prediction" element={<YieldPrediction />} />
           <Route path="/recommendations" element={<Recommendations />} />
