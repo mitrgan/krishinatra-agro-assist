@@ -6,14 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Check, Globe } from 'lucide-react';
 
 const LANGUAGES = [
-  { code: 'en', name: 'English', nativeName: 'English' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिंदी' },
-  { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ' },
-  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
-  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
-  { code: 'mr', name: 'Marathi', nativeName: 'मराठी' },
-  { code: 'te', name: 'Telugu', nativeName: 'తెలుగు' },
-  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
+  { code: 'en', name: 'English', nativeName: 'English', color: 'languages-english' },
+  { code: 'hi', name: 'Hindi', nativeName: 'हिंदी', color: 'languages-hindi' },
+  { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', color: 'languages-punjabi' },
+  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', color: 'languages-tamil' },
+  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', color: 'languages-kannada' },
+  { code: 'mr', name: 'Marathi', nativeName: 'मराठी', color: 'languages-marathi' },
+  { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', color: 'languages-telugu' },
+  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', color: 'languages-bengali' },
 ];
 
 export default function LanguageSelection() {
@@ -47,28 +47,72 @@ export default function LanguageSelection() {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {LANGUAGES.map((language) => (
                 <button
                   key={language.code}
                   onClick={() => handleLanguageSelect(language.code)}
-                  className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
+                  className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-medium ${
                     selectedLanguage === language.code
-                      ? 'border-primary bg-primary/10 shadow-lg'
-                      : 'border-border hover:border-primary/50 bg-card'
+                      ? `bg-${language.color} border-${language.color} shadow-soft`
+                      : `border-border hover:border-${language.color} bg-card/50 backdrop-blur-sm`
                   }`}
+                  style={{
+                    backgroundColor: selectedLanguage === language.code 
+                      ? `hsl(var(--lang-${language.code === 'en' ? 'english' : 
+                          language.code === 'hi' ? 'hindi' :
+                          language.code === 'pa' ? 'punjabi' :
+                          language.code === 'ta' ? 'tamil' :
+                          language.code === 'kn' ? 'kannada' :
+                          language.code === 'mr' ? 'marathi' :
+                          language.code === 'te' ? 'telugu' : 'bengali'}))` 
+                      : undefined,
+                    borderColor: selectedLanguage === language.code 
+                      ? `hsl(var(--lang-${language.code === 'en' ? 'english' : 
+                          language.code === 'hi' ? 'hindi' :
+                          language.code === 'pa' ? 'punjabi' :
+                          language.code === 'ta' ? 'tamil' :
+                          language.code === 'kn' ? 'kannada' :
+                          language.code === 'mr' ? 'marathi' :
+                          language.code === 'te' ? 'telugu' : 'bengali'}))` 
+                      : undefined
+                  }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-foreground text-left">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className={`font-bold text-lg ${
+                      selectedLanguage === language.code 
+                        ? 'text-white' 
+                        : 'text-foreground group-hover:text-primary'
+                    }`}>
                       {language.name}
                     </h3>
                     {selectedLanguage === language.code && (
-                      <Check className="h-5 w-5 text-primary" />
+                      <Check className="h-6 w-6 text-white" />
                     )}
                   </div>
-                  <p className="text-2xl font-medium text-primary mb-1">
+                  <p className={`text-3xl font-bold ${
+                    selectedLanguage === language.code 
+                      ? 'text-white' 
+                      : 'text-muted-foreground group-hover:text-primary'
+                  }`}>
                     {language.nativeName}
                   </p>
+                  
+                  {/* Hover gradient overlay */}
+                  <div 
+                    className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${
+                      selectedLanguage !== language.code ? 'block' : 'hidden'
+                    }`}
+                    style={{
+                      background: `hsl(var(--lang-${language.code === 'en' ? 'english' : 
+                        language.code === 'hi' ? 'hindi' :
+                        language.code === 'pa' ? 'punjabi' :
+                        language.code === 'ta' ? 'tamil' :
+                        language.code === 'kn' ? 'kannada' :
+                        language.code === 'mr' ? 'marathi' :
+                        language.code === 'te' ? 'telugu' : 'bengali'}))`
+                    }}
+                  />
                 </button>
               ))}
             </div>

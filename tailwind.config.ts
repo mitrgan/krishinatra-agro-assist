@@ -57,6 +57,16 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        languages: {
+          english: "hsl(var(--lang-english))",
+          hindi: "hsl(var(--lang-hindi))",
+          punjabi: "hsl(var(--lang-punjabi))",
+          tamil: "hsl(var(--lang-tamil))",
+          kannada: "hsl(var(--lang-kannada))",
+          marathi: "hsl(var(--lang-marathi))",
+          telugu: "hsl(var(--lang-telugu))",
+          bengali: "hsl(var(--lang-bengali))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
