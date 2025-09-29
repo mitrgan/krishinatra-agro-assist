@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Globe } from 'lucide-react';
+import AppLogo from '@/components/AppLogo';
 
 const LANGUAGES = [
   { code: 'en', name: 'English', nativeName: 'English', color: 'languages-english' },
@@ -35,14 +36,12 @@ export default function LanguageSelection() {
       <div className="w-full max-w-4xl mx-auto">
         <Card className="shadow-xl border-0 bg-card/90 backdrop-blur-sm">
           <CardHeader className="text-center pb-6">
-            <div className="flex items-center justify-center mb-4">
-              <Globe className="h-12 w-12 text-primary" />
-            </div>
+            <AppLogo variant="card" className="mb-6" />
             <CardTitle className="text-3xl font-bold text-foreground">
               {t('select_language')}
             </CardTitle>
             <CardDescription className="text-lg text-muted-foreground mt-2">
-              {t('app_title')} - Choose your preferred language
+              Choose your preferred language
             </CardDescription>
           </CardHeader>
           

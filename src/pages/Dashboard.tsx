@@ -11,6 +11,7 @@ import {
   Calendar, 
   TestTube 
 } from "lucide-react";
+import AppLogo from "@/components/AppLogo";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -68,8 +69,9 @@ const Dashboard = () => {
           <LanguageSwitcher />
         </div>
         <div className="text-center mb-12">
+          <AppLogo variant="card" className="mb-8" />
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            {t("welcome")} to Krishinatra
+            {t("welcome")} to Smart Farming
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             {t("welcome_message")}

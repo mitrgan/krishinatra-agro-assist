@@ -12,7 +12,7 @@ import {
   Users 
 } from "lucide-react";
 import heroFarm from "@/assets/hero-farm.jpg";
-import krishinetraLogo from "@/assets/krishinetra-logo.png";
+import AppLogo from "@/components/AppLogo";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -62,21 +62,7 @@ const Index = () => {
         <div className="relative container mx-auto px-4 py-24 text-center">
           <div className="max-w-4xl mx-auto text-white">
             {/* Logo Section */}
-            <div className="mb-8 flex flex-col items-center">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-white/20">
-                <img 
-                  src={krishinetraLogo} 
-                  alt="Krishinetra Logo" 
-                  className="h-24 md:h-32 mx-auto drop-shadow-2xl"
-                />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-                Krishinatra
-              </h1>
-              <p className="text-lg md:text-xl text-accent font-semibold mb-6">
-                Smart Farming Companion
-              </p>
-            </div>
+            <AppLogo variant="hero" className="mb-8" />
             
             <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
               {t("welcome_message")}
