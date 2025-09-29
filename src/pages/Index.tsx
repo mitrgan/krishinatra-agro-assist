@@ -12,6 +12,7 @@ import {
   Users 
 } from "lucide-react";
 import heroFarm from "@/assets/hero-farm.jpg";
+import krishinetraLogo from "@/assets/krishinetra-logo.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -60,6 +61,15 @@ const Index = () => {
         
         <div className="relative container mx-auto px-4 py-24 text-center">
           <div className="max-w-4xl mx-auto text-white">
+            {/* Logo */}
+            <div className="mb-8">
+              <img 
+                src={krishinetraLogo} 
+                alt="Krishinetra Logo" 
+                className="h-20 md:h-24 mx-auto mb-4 drop-shadow-lg"
+              />
+            </div>
+            
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
               {t("welcome")} to <span className="text-accent">Krishinatra</span>
             </h1>
