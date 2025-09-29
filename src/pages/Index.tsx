@@ -61,18 +61,26 @@ const Index = () => {
         
         <div className="relative container mx-auto px-4 py-24 text-center">
           <div className="max-w-4xl mx-auto text-white">
-            {/* Logo */}
-            <div className="mb-8">
-              <img 
-                src={krishinetraLogo} 
-                alt="Krishinetra Logo" 
-                className="h-20 md:h-24 mx-auto mb-4 drop-shadow-lg"
-              />
+            {/* Logo Section */}
+            <div className="mb-8 flex flex-col items-center">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-white/20">
+                <img 
+                  src={krishinetraLogo} 
+                  alt="Krishinetra Logo" 
+                  className="h-24 md:h-32 mx-auto drop-shadow-2xl"
+                />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                Krishinatra
+              </h1>
+              <p className="text-lg md:text-xl text-accent font-semibold mb-6">
+                Smart Farming Companion
+              </p>
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              {t("welcome")} to <span className="text-accent">Krishinatra</span>
-            </h1>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+              {t("welcome_message")}
+            </h2>
             <p className="text-xl md:text-2xl mb-8 opacity-90 leading-relaxed">
               {t("welcome_message")}
             </p>
