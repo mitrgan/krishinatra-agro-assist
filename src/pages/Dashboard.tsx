@@ -9,7 +9,8 @@ import {
   Bug, 
   Calculator, 
   Calendar, 
-  TestTube 
+  TestTube,
+  Users
 } from "lucide-react";
 import AppLogo from "@/components/AppLogo";
 import dashboardHero from "@/assets/dashboard-hero.jpg";
@@ -60,6 +61,13 @@ const Dashboard = () => {
       icon: TestTube,
       path: "/soil-analysis",
       color: "bg-gradient-earth"
+    },
+    {
+      title: t("community"),
+      description: t("community_desc"),
+      icon: Users,
+      path: "/community",
+      color: "bg-gradient-primary"
     }
   ];
 
@@ -117,7 +125,7 @@ const Dashboard = () => {
           })}
         </div>
 
-        <div className="bg-gradient-harvest rounded-lg p-8 text-center shadow-soft">
+        <div className="bg-gradient-harvest rounded-lg p-8 text-center shadow-soft mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">
             {t("revolutionize_farming")}
           </h2>
@@ -131,6 +139,35 @@ const Dashboard = () => {
           >
             {t("start_analysis")}
           </Button>
+        </div>
+
+        {/* Community Section */}
+        <div className="bg-gradient-to-r from-[#E8F5E9] to-[#F1F8E9] rounded-lg p-8 text-center shadow-soft border border-[#2E7D32]/20">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Users className="h-8 w-8 text-[#2E7D32]" />
+            <h2 className="text-2xl font-bold text-[#2E7D32]">
+              {t("join_community")}
+            </h2>
+          </div>
+          <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+            {t("community_benefits")}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              onClick={() => navigate('/community')}
+              className="bg-[#2E7D32] hover:bg-[#1B5E20] text-white px-8 py-3 text-lg"
+            >
+              <Users className="h-5 w-5 mr-2" />
+              {t("go_to_community")}
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => navigate('/community')}
+              className="border-[#2E7D32] text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white px-8 py-3 text-lg"
+            >
+              {t("learn_more")}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

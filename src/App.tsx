@@ -12,6 +12,7 @@ import DiseaseDetection from "./pages/DiseaseDetection";
 import SoilAnalysis from "./pages/SoilAnalysis";
 import GrowthTimeline from "./pages/GrowthTimeline";
 import LanguageSelection from "./pages/LanguageSelection";
+import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
 import "./i18n";
 
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/disease-detection" element={<DiseaseDetection />} />
           <Route path="/soil-analysis" element={<SoilAnalysis />} />
           <Route path="/timeline" element={<GrowthTimeline />} />
+          <Route path="/community" element={<Community />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
