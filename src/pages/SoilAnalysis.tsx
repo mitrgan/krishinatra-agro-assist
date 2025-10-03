@@ -23,7 +23,8 @@ import {
   Lightbulb,
   CheckCircle,
   AlertTriangle,
-  Info
+  Info,
+  Calculator
 } from "lucide-react";
 import AppLogo from "@/components/AppLogo";
 import { soilAnalysisEngine, SoilAnalysisResult } from "@/lib/soilDatabase";
@@ -398,6 +399,25 @@ const SoilAnalysis = () => {
                                     </ul>
                                   </div>
                                 )}
+
+                                <div className="mt-4">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                                    onClick={() => {
+                                      navigate('/profit-analysis', {
+                                        state: {
+                                          soilAnalysisData: analysisResult,
+                                          selectedCrop: crop.name
+                                        }
+                                      });
+                                    }}
+                                  >
+                                    <Calculator className="h-4 w-4 mr-2" />
+                                    Analyze Profit
+                                  </Button>
+                                </div>
                               </CardContent>
                             </Card>
                           ))}
@@ -501,20 +521,38 @@ const SoilAnalysis = () => {
                         <div>
                           <div className="flex items-center justify-between mb-3">
                             <h4 className="font-semibold text-gray-900">Suggested Crops for Timeline</h4>
-                            <Button
-                              size="sm"
-                              className="bg-green-600 hover:bg-green-700 text-white"
-                              onClick={() => {
-                                // In a real app, this would add crops to timeline
-                                toast({
-                                  title: "Added to Timeline",
-                                  description: "Crops have been added to your farming timeline",
-                                });
-                              }}
-                            >
-                              <Calendar className="h-4 w-4 mr-2" />
-                              Add to Timeline
-                            </Button>
+                            <div className="flex space-x-2">
+                              <Button
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                                onClick={() => {
+                                  // In a real app, this would add crops to timeline
+                                  toast({
+                                    title: "Added to Timeline",
+                                    description: "Crops have been added to your farming timeline",
+                                  });
+                                }}
+                              >
+                                <Calendar className="h-4 w-4 mr-2" />
+                                Add to Timeline
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-green-600 text-green-600 hover:bg-green-50"
+                                onClick={() => {
+                                  navigate('/profit-analysis', {
+                                    state: {
+                                      soilAnalysisData: analysisResult,
+                                      selectedCrop: analysisResult.recommendedCrops[0]?.name
+                                    }
+                                  });
+                                }}
+                              >
+                                <Calculator className="h-4 w-4 mr-2" />
+                                Profit Analysis
+                              </Button>
+                            </div>
                           </div>
                           <div className="flex flex-wrap gap-2">
                             {analysisResult.timelineIntegration?.suggestedCrops?.map((crop, index) => (
