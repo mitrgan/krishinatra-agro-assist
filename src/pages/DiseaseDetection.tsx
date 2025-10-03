@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { 
@@ -17,41 +19,19 @@ import {
   Leaf,
   Bug,
   Droplets,
-  Shield
+  Shield,
+  FileText,
+  MessageSquare,
+  Zap,
+  DollarSign,
+  Lightbulb,
+  Microscope,
+  User
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { diseaseAnalysisEngine, DiseaseAnalysis, DiseaseDiagnosis } from "@/lib/diseaseDatabase";
 
-interface Solution {
-  title: string;
-  steps: string[];
-  materials: string[];
-  cost: "low" | "medium" | "high";
-  notes: string;
-}
-
-interface DiseaseAnalysis {
-  diseaseName: string;
-  confidence: number;
-  severity: "Early Stage" | "Moderate" | "Severe";
-  symptoms: string[];
-  causes: string[];
-  recommendations: {
-    immediate: string[];
-    week: string[];
-    longTerm: string[];
-  };
-  solutions: {
-    organic: Solution[];
-    costEfficient: Solution[];
-    unique: Solution[];
-  };
-  questionsToFarmer?: string[];
-  nextSteps: {
-    labTest: boolean;
-    contactAgronomist: boolean;
-  };
-  confidenceSummary: "High" | "Medium" | "Low";
-}
+// Remove old interfaces - now using imported ones from diseaseDatabase
 
 const DiseaseDetection = () => {
   const navigate = useNavigate();
@@ -61,233 +41,53 @@ const DiseaseDetection = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState<DiseaseAnalysis | null>(null);
+  const [symptomDescription, setSymptomDescription] = useState("");
+  const [cropType, setCropType] = useState("");
+  const [activeTab, setActiveTab] = useState("image");
 
-  // Mock disease analysis data - comprehensive system
-  const mockAnalyses: DiseaseAnalysis[] = [
-    {
-      diseaseName: "Late Blight (Phytophthora infestans)",
-      confidence: 72,
-      severity: "Moderate",
-      symptoms: [
-        "Brown-black lesions on leaves with white fungal growth on undersides",
-        "Dark spots spreading rapidly across foliage",
-        "Stems showing dark streaks",
-        "Fruit developing firm brown rot"
-      ],
-      causes: [
-        "High humidity (>90%) combined with moderate temperatures (15-25°C)",
-        "Extended leaf wetness from rain or heavy dew",
-        "Poor air circulation in dense plantings",
-        "Infected seed tubers or nearby infected crops"
-      ],
-      recommendations: {
-        immediate: [
-          "Remove and destroy all visibly infected leaves and stems today",
-          "Stop overhead watering immediately - water at soil level only",
-          "Improve air circulation by gentle pruning if safe",
-          "Apply first treatment from solution pathways below"
-        ],
-        week: [
-          "Monitor daily for new spots - mark affected plants",
-          "Continue chosen treatment every 5-7 days",
-          "Check soil moisture - avoid waterlogging",
-          "Inspect neighboring crops for spread",
-          "Document progression with photos"
-        ],
-        longTerm: [
-          "Plant certified disease-free seed next season",
-          "Practice 3-year crop rotation (avoid tomato, potato, eggplant)",
-          "Consider resistant varieties (check with local extension)",
-          "Install drip irrigation to keep foliage dry",
-          "Improve field drainage before next planting"
-        ]
-      },
-      solutions: {
-        organic: [
-          {
-            title: "Neem + Wood Ash Spray",
-            steps: [
-              "Mix 30ml pure neem oil with 5 liters water",
-              "Add 2 tablespoons wood ash (potash source)",
-              "Add 5ml liquid soap as emulsifier",
-              "Stir thoroughly and strain through cloth",
-              "Spray in early morning on all leaf surfaces",
-              "Repeat every 5 days for 3 weeks"
-            ],
-            materials: [
-              "Pure neem oil (locally available)",
-              "Clean wood ash from cooking fire",
-              "Liquid soap (dishwashing type)",
-              "Sprayer or hand-pump"
-            ],
-            cost: "low",
-            notes: "Safe for beneficial insects. No harvest waiting period. Most effective in early stages. Will not eliminate severe infections but slows progression."
-          }
-        ],
-        costEfficient: [
-          {
-            title: "Copper-Based Fungicide (Registered Product)",
-            steps: [
-              "Purchase copper oxychloride or Bordeaux mixture from licensed dealer",
-              "DO NOT determine dosage yourself",
-              "Consult product label or local agronomist for exact mixing ratio",
-              "Apply as directed on packaging",
-              "Observe safety precautions and harvest interval on label"
-            ],
-            materials: [
-              "Registered copper-based fungicide",
-              "Clean water",
-              "PPE: gloves, mask, long sleeves",
-              "Calibrated sprayer"
-            ],
-            cost: "medium",
-            notes: "More effective than organic but requires careful handling. Follow local regulations. Check harvest waiting period. Cost: ₹300-500 for small farm treatment. NEVER mix without label guidance."
-          }
-        ],
-        unique: [
-          {
-            title: "Mulch + Intercrop + Solar Trap",
-            steps: [
-              "Apply 5cm thick straw mulch around plant bases to reduce soil splash",
-              "Plant fast-growing marigold or basil between crop rows (repels some insects, improves air flow)",
-              "Create simple solar trap: place dark cloth strips coated with sticky substance (tree gum + oil) near infected area to catch spores",
-              "Prune lower leaves to 15cm above soil to prevent contact with fungal spores",
-              "If possible, construct simple rain shield (bamboo + plastic) over worst-affected row"
-            ],
-            materials: [
-              "Straw or dried grass (free/farm waste)",
-              "Marigold or basil seeds (low cost)",
-              "Dark cloth scraps + sticky substance",
-              "Bamboo poles + clear plastic (optional)"
-            ],
-            cost: "low",
-            notes: "Innovative but labor-intensive. Best combined with one of the other methods. Particularly effective in small plots. Creates physical and biological barriers."
-          }
-        ]
-      },
-      questionsToFarmer: [
-        "How many days ago did you first notice these spots?",
-        "Are nearby plants (within 5 meters) also showing symptoms?",
-        "Have you had heavy rain or fog in the past week?",
-        "What crop was planted in this field last season?"
-      ],
-      nextSteps: {
-        labTest: false,
-        contactAgronomist: true
-      },
-      confidenceSummary: "High"
-    },
-    {
-      diseaseName: "Powdery Mildew (Erysiphe/Oidium spp.)",
-      confidence: 92,
-      severity: "Early Stage",
-      symptoms: [
-        "White powdery coating on upper leaf surfaces",
-        "Leaves curling at edges",
-        "Slight yellowing under powder",
-        "No visible pests or fruit damage yet"
-      ],
-      causes: [
-        "Moderate temperatures (20-30°C) with low humidity paradoxically",
-        "Shaded conditions with poor air movement",
-        "Dense plantings",
-        "High nitrogen fertilization making tender tissue"
-      ],
-      recommendations: {
-        immediate: [
-          "Remove worst-affected leaves (if <20% of plant)",
-          "Thin out dense areas to improve sunlight penetration",
-          "Apply first organic treatment today",
-          "Move potted plants to sunnier location if applicable"
-        ],
-        week: [
-          "Spray chosen treatment every 3-4 days",
-          "Monitor new growth daily",
-          "Avoid nitrogen-heavy fertilizers this week",
-          "Water at soil level in morning only"
-        ],
-        longTerm: [
-          "Select mildew-resistant varieties next season",
-          "Maintain proper plant spacing (follow variety guidelines)",
-          "Ensure 6+ hours direct sunlight daily",
-          "Alternate crop families to break disease cycle"
-        ]
-      },
-      solutions: {
-        organic: [
-          {
-            title: "Milk + Water Spray",
-            steps: [
-              "Mix 1 part milk (any type) with 9 parts water",
-              "Add 1 drop liquid soap per liter as wetting agent",
-              "Pour into sprayer",
-              "Spray thoroughly on all leaf surfaces until dripping",
-              "Apply every 3 days for 2 weeks",
-              "Best applied in morning sun"
-            ],
-            materials: [
-              "Fresh or powdered milk (2 cups for 2L solution)",
-              "Clean water",
-              "Liquid soap",
-              "Sprayer"
-            ],
-            cost: "low",
-            notes: "Scientifically proven (milk proteins have antifungal properties). Safe and no waiting period. Effectiveness: 60-70% in early stages. Cost: ₹20-30 per application."
-          }
-        ],
-        costEfficient: [
-          {
-            title: "Sulfur Dust (Agricultural Grade)",
-            steps: [
-              "Purchase wettable sulfur or sulfur dust from agricultural supplier",
-              "Confirm product is registered for food crops",
-              "Follow package instructions for application rate",
-              "Apply in cool morning (avoid >30°C as sulfur can burn leaves)",
-              "Wear dust mask during application"
-            ],
-            materials: [
-              "Agricultural sulfur (wettable or dust)",
-              "Duster or sprayer (depending on formulation)",
-              "Dust mask and gloves"
-            ],
-            cost: "low",
-            notes: "Very effective and inexpensive. Safe if used correctly. Do not apply in hot weather. Some organic certifications allow sulfur. Cost: ₹100-200 for small farm season supply."
-          }
-        ],
-        unique: [
-          {
-            title: "Baking Soda + Oil Emulsion",
-            steps: [
-              "Mix 1 tablespoon baking soda per liter water",
-              "Add 1 tablespoon vegetable oil (sunflower or mustard)",
-              "Add 3 drops liquid soap",
-              "Shake well before each spray",
-              "Spray on all plant surfaces weekly",
-              "Do a small test patch first to check for leaf sensitivity"
-            ],
-            materials: [
-              "Baking soda (sodium bicarbonate - readily available)",
-              "Cooking oil",
-              "Liquid soap",
-              "Sprayer"
-            ],
-            cost: "low",
-            notes: "Creates alkaline surface hostile to fungus. Oil helps solution stick. Not suitable for all crops - test first. Popular home-garden remedy with moderate scientific backing. Cost: ₹15-20 per application."
-          }
-        ]
-      },
-      questionsToFarmer: [
-        "Is this crop in full sun or partly shaded?",
-        "When did you last fertilize and with what?",
-        "Are leaves staying dry or getting wet from irrigation?"
-      ],
-      nextSteps: {
-        labTest: false,
-        contactAgronomist: false
-      },
-      confidenceSummary: "High"
+  // Analysis functions
+  const analyzeImage = async () => {
+    if (!selectedImage) return;
+
+    setIsAnalyzing(true);
+    
+    // Simulate AI analysis with real disease database
+    setTimeout(() => {
+      const analysis = diseaseAnalysisEngine.analyzeImage(imagePreview || "");
+      setAnalysis(analysis);
+      setIsAnalyzing(false);
+      
+      toast({
+        title: "Analysis Complete",
+        description: `Top diagnosis: ${analysis.topDiagnoses[0].name}`,
+      });
+    }, 3000);
+  };
+
+  const analyzeSymptoms = async () => {
+    if (!symptomDescription.trim()) {
+      toast({
+        title: "Please describe symptoms",
+        description: "Enter a description of the plant symptoms you're observing",
+        variant: "destructive"
+      });
+      return;
     }
-  ];
+
+    setIsAnalyzing(true);
+    
+    // Simulate AI analysis with real disease database
+    setTimeout(() => {
+      const analysis = diseaseAnalysisEngine.analyzeSymptoms(symptomDescription, cropType);
+      setAnalysis(analysis);
+      setIsAnalyzing(false);
+      
+      toast({
+        title: "Analysis Complete",
+        description: `Top diagnosis: ${analysis.topDiagnoses[0].name}`,
+      });
+    }, 2000);
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -311,34 +111,57 @@ const DiseaseDetection = () => {
     }
   };
 
-  const analyzeImage = async () => {
-    if (!selectedImage) return;
-
-    setIsAnalyzing(true);
-    
-    // Simulate AI analysis
-    setTimeout(() => {
-      const randomAnalysis = mockAnalyses[Math.floor(Math.random() * mockAnalyses.length)];
-      setAnalysis(randomAnalysis);
-      setIsAnalyzing(false);
-      
-      toast({
-        title: "Analysis Complete",
-        description: `Disease detected: ${randomAnalysis.diseaseName}`,
-      });
-    }, 3000);
-  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "Early Stage":
+      case "early":
         return "bg-green-100 text-green-800 border-green-200";
-      case "Moderate":
+      case "moderate":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "Severe":
+      case "severe":
         return "bg-red-100 text-red-800 border-red-200";
+      case "uncertain":
+        return "bg-gray-100 text-gray-800 border-gray-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case "fungal":
+        return <Leaf className="h-4 w-4" />;
+      case "bacterial":
+        return <Bug className="h-4 w-4" />;
+      case "viral":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "nematode":
+        return <Microscope className="h-4 w-4" />;
+      case "nutrient":
+        return <Droplets className="h-4 w-4" />;
+      case "pest":
+        return <Shield className="h-4 w-4" />;
+      default:
+        return <Bug className="h-4 w-4" />;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "fungal":
+        return "text-green-600";
+      case "bacterial":
+        return "text-red-600";
+      case "viral":
+        return "text-purple-600";
+      case "nematode":
+        return "text-orange-600";
+      case "nutrient":
+        return "text-blue-600";
+      case "pest":
+        return "text-yellow-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -366,80 +189,136 @@ const DiseaseDetection = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Upload Section */}
+          {/* Input Section */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Camera className="h-5 w-5" />
-                {t('upload_crop_image')}
+                Disease Detection Input
               </CardTitle>
               <CardDescription>
-                {t('upload_image_desc')}
+                Upload an image or describe symptoms to identify plant diseases
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="image-upload">Select Image</Label>
-                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
-                  {imagePreview ? (
-                    <div className="space-y-4">
-                      <img 
-                        src={imagePreview} 
-                        alt="Uploaded crop" 
-                        className="max-w-full h-64 object-contain mx-auto rounded-lg"
-                      />
-                      <div className="flex gap-2 justify-center">
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            setSelectedImage(null);
-                            setImagePreview(null);
-                            setAnalysis(null);
-                          }}
-                        >
-                          Remove Image
-                        </Button>
-                        <Button 
-                          onClick={analyzeImage}
-                          disabled={isAnalyzing}
-                          className="bg-gradient-primary"
-                        >
-                          {isAnalyzing ? t('analyzing') : t('analyze_disease')}
-                        </Button>
-                      </div>
+            <CardContent>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="image" className="flex items-center gap-2">
+                    <Camera className="h-4 w-4" />
+                    Image Analysis
+                  </TabsTrigger>
+                  <TabsTrigger value="symptoms" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    Symptom Description
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="image" className="space-y-6 mt-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="image-upload">Select Image</Label>
+                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
+                      {imagePreview ? (
+                        <div className="space-y-4">
+                          <img 
+                            src={imagePreview} 
+                            alt="Uploaded crop" 
+                            className="max-w-full h-64 object-contain mx-auto rounded-lg"
+                          />
+                          <div className="flex gap-2 justify-center">
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedImage(null);
+                                setImagePreview(null);
+                                setAnalysis(null);
+                              }}
+                            >
+                              Remove Image
+                            </Button>
+                            <Button 
+                              onClick={analyzeImage}
+                              disabled={isAnalyzing}
+                              className="bg-gradient-primary"
+                            >
+                              {isAnalyzing ? t('analyzing') : t('analyze_disease')}
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <Upload className="h-12 w-12 text-muted-foreground mx-auto" />
+                          <div>
+                            <p className="text-sm font-medium">Click to upload or drag and drop</p>
+                            <p className="text-xs text-muted-foreground">PNG, JPG up to 10MB</p>
+                          </div>
+                          <Input
+                            id="image-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                          />
+                          <Label 
+                            htmlFor="image-upload"
+                            className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+                          >
+                            Select Image
+                          </Label>
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <Upload className="h-12 w-12 text-muted-foreground mx-auto" />
-                      <div>
-                        <p className="text-sm font-medium">Click to upload or drag and drop</p>
-                        <p className="text-xs text-muted-foreground">PNG, JPG up to 10MB</p>
-                      </div>
-                      <Input
-                        id="image-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                      />
-                      <Label 
-                        htmlFor="image-upload"
-                        className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-                      >
-                        Select Image
-                      </Label>
-                    </div>
-                  )}
-                </div>
-              </div>
+                  </div>
 
-              <Alert>
-                <Leaf className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Tips for better results:</strong> Focus on affected areas, ensure good lighting, 
-                  include multiple angles if possible, and capture both healthy and diseased parts for comparison.
-                </AlertDescription>
-              </Alert>
+                  <Alert>
+                    <Leaf className="h-4 w-4" />
+                    <AlertDescription>
+                      <strong>Tips for better results:</strong> Focus on affected areas, ensure good lighting, 
+                      include multiple angles if possible, and capture both healthy and diseased parts for comparison.
+                    </AlertDescription>
+                  </Alert>
+                </TabsContent>
+                
+                <TabsContent value="symptoms" className="space-y-6 mt-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="crop-type">Crop Type (Optional)</Label>
+                      <Input
+                        id="crop-type"
+                        placeholder="e.g., Tomato, Rice, Wheat, etc."
+                        value={cropType}
+                        onChange={(e) => setCropType(e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="symptom-description">Describe the symptoms you're seeing</Label>
+                      <Textarea
+                        id="symptom-description"
+                        placeholder="Describe what you observe: leaf spots, wilting, discoloration, growth issues, etc. Be as detailed as possible."
+                        value={symptomDescription}
+                        onChange={(e) => setSymptomDescription(e.target.value)}
+                        rows={6}
+                      />
+                    </div>
+                    
+                    <Button 
+                      onClick={analyzeSymptoms}
+                      disabled={isAnalyzing || !symptomDescription.trim()}
+                      className="w-full bg-gradient-primary"
+                    >
+                      {isAnalyzing ? t('analyzing') : 'Analyze Symptoms'}
+                    </Button>
+                  </div>
+
+                  <Alert>
+                    <MessageSquare className="h-4 w-4" />
+                    <AlertDescription>
+                      <strong>Be specific:</strong> Include details about leaf color changes, spots, wilting patterns, 
+                      growth stage, and any environmental conditions that might be relevant.
+                    </AlertDescription>
+                  </Alert>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
 
@@ -458,48 +337,77 @@ const DiseaseDetection = () => {
               {isAnalyzing ? (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                  <p className="text-muted-foreground">Analyzing your crop image...</p>
+                  <p className="text-muted-foreground">Analyzing your input...</p>
                   <p className="text-sm text-muted-foreground mt-2">This may take a few moments</p>
                 </div>
               ) : analysis ? (
                 <div className="space-y-6">
-                  {/* Disease Identification */}
+                  {/* Top Diagnoses */}
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold text-lg">{analysis.diseaseName}</h3>
-                      <Badge variant="outline" className={getSeverityColor(analysis.severity)}>
-                        {analysis.severity}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-sm text-muted-foreground">Confidence:</span>
-                      <div className="flex-1 bg-muted rounded-full h-2">
-                        <div 
-                          className="bg-gradient-primary h-2 rounded-full" 
-                          style={{ width: `${analysis.confidence}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-sm font-medium">{analysis.confidence}%</span>
+                    <h3 className="font-semibold text-lg mb-4">Top Diagnoses</h3>
+                    <div className="space-y-3">
+                      {analysis.topDiagnoses.map((diagnosis, index) => (
+                        <div key={index} className="border rounded-lg p-4 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-muted-foreground">#{index + 1}</span>
+                              <h4 className="font-semibold">{diagnosis.name}</h4>
+                              <div className={`flex items-center gap-1 ${getCategoryColor(diagnosis.category)}`}>
+                                {getCategoryIcon(diagnosis.category)}
+                                <span className="text-xs capitalize">{diagnosis.category}</span>
+                              </div>
+                            </div>
+                            <Badge variant="outline" className={getSeverityColor(diagnosis.severity)}>
+                              {diagnosis.severity}
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">Confidence:</span>
+                            <div className="flex-1 bg-muted rounded-full h-2">
+                              <div 
+                                className="bg-gradient-primary h-2 rounded-full" 
+                                style={{ width: `${diagnosis.confidence * 100}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-sm font-medium">{Math.round(diagnosis.confidence * 100)}%</span>
+                          </div>
+                          
+                          <p className="text-sm text-muted-foreground italic">{diagnosis.notes}</p>
+                          
+                          <div className="text-xs text-muted-foreground">
+                            <strong>Affected crops:</strong> {diagnosis.crops.join(", ")}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
                   <Separator />
 
-                  {/* Symptoms */}
-                  <div>
-                    <h4 className="font-medium mb-2 flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4" />
-                      Symptoms Detected
-                    </h4>
-                    <ul className="space-y-1">
-                      {analysis.symptoms.map((symptom, index) => (
-                        <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 bg-primary rounded-full" />
-                          {symptom}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {/* Questions to Farmer */}
+                  {analysis.questionsToFarmer && analysis.questionsToFarmer.length > 0 && (
+                    <>
+                      <div>
+                        <h4 className="font-medium mb-3 flex items-center gap-2">
+                          <MessageSquare className="h-4 w-4" />
+                          Help Us Refine the Diagnosis
+                        </h4>
+                        <Alert>
+                          <AlertTriangle className="h-4 w-4" />
+                          <AlertDescription>
+                            <strong>Please answer these questions to improve accuracy:</strong>
+                            <ul className="mt-2 space-y-1">
+                              {analysis.questionsToFarmer.map((question, index) => (
+                                <li key={index} className="text-sm">• {question}</li>
+                              ))}
+                            </ul>
+                          </AlertDescription>
+                        </Alert>
+                      </div>
+                      <Separator />
+                    </>
+                  )}
 
                   {/* Questions to Farmer */}
                   {analysis.questionsToFarmer && analysis.questionsToFarmer.length > 0 && (
@@ -559,12 +467,18 @@ const DiseaseDetection = () => {
 
                   {/* Solution Pathways */}
                   <div>
-                    <h4 className="font-medium mb-3">💊 Treatment Solutions</h4>
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Droplets className="h-4 w-4" />
+                      Treatment Solutions
+                    </h4>
 
                     {/* Organic */}
                     <div className="mb-4 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/20 rounded-lg p-3">
                       <div className="flex items-center justify-between mb-2">
-                        <h5 className="text-sm font-semibold text-green-700 dark:text-green-400">🌿 Organic Solution</h5>
+                        <h5 className="text-sm font-semibold text-green-700 dark:text-green-400 flex items-center gap-2">
+                          <Leaf className="h-4 w-4" />
+                          Organic Solution
+                        </h5>
                         <Badge variant="outline" className="text-xs">Cost: {analysis.solutions.organic[0].cost}</Badge>
                       </div>
                       <p className="font-medium text-sm mb-2">{analysis.solutions.organic[0].title}</p>
@@ -583,7 +497,10 @@ const DiseaseDetection = () => {
                     {/* Cost Efficient */}
                     <div className="mb-4 border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3">
                       <div className="flex items-center justify-between mb-2">
-                        <h5 className="text-sm font-semibold text-blue-700 dark:text-blue-400">💰 Cost-Efficient</h5>
+                        <h5 className="text-sm font-semibold text-blue-700 dark:text-blue-400 flex items-center gap-2">
+                          <DollarSign className="h-4 w-4" />
+                          Cost-Efficient
+                        </h5>
                         <Badge variant="outline" className="text-xs">Cost: {analysis.solutions.costEfficient[0].cost}</Badge>
                       </div>
                       <p className="font-medium text-sm mb-2">{analysis.solutions.costEfficient[0].title}</p>
@@ -607,7 +524,10 @@ const DiseaseDetection = () => {
                     {/* Unique */}
                     <div className="border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/20 rounded-lg p-3">
                       <div className="flex items-center justify-between mb-2">
-                        <h5 className="text-sm font-semibold text-purple-700 dark:text-purple-400">✨ Unique/Innovative</h5>
+                        <h5 className="text-sm font-semibold text-purple-700 dark:text-purple-400 flex items-center gap-2">
+                          <Lightbulb className="h-4 w-4" />
+                          Unique/Innovative
+                        </h5>
                         <Badge variant="outline" className="text-xs">Cost: {analysis.solutions.unique[0].cost}</Badge>
                       </div>
                       <p className="font-medium text-sm mb-2">{analysis.solutions.unique[0].title}</p>
@@ -628,7 +548,7 @@ const DiseaseDetection = () => {
 
                   {/* Next Steps */}
                   <Alert>
-                    <Droplets className="h-4 w-4" />
+                    <User className="h-4 w-4" />
                     <AlertDescription>
                       <strong>When to Escalate:</strong>
                       <ul className="mt-2 space-y-1 text-sm">
@@ -640,16 +560,13 @@ const DiseaseDetection = () => {
                         )}
                         <li>• Seek expert help if no improvement after 2 weeks</li>
                       </ul>
-                      <p className="text-xs mt-2 text-muted-foreground">
-                        Confidence: <strong>{analysis.confidenceSummary}</strong>
-                      </p>
                     </AlertDescription>
                   </Alert>
                 </div>
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <Bug className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p>Upload an image to start disease analysis</p>
+                  <p>Upload an image or describe symptoms to start disease analysis</p>
                   <p className="text-sm mt-2">Our AI will identify diseases and provide treatment recommendations</p>
                 </div>
               )}
@@ -658,23 +575,23 @@ const DiseaseDetection = () => {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="text-center">
             <CardContent className="pt-6">
               <Camera className="h-8 w-8 text-primary mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">High-Quality Images</h3>
+              <h3 className="font-semibold mb-2">Image Analysis</h3>
               <p className="text-sm text-muted-foreground">
-                Clear, focused photos give the most accurate disease detection results
+                Upload clear photos for AI-powered visual disease detection
               </p>
             </CardContent>
           </Card>
           
           <Card className="text-center">
             <CardContent className="pt-6">
-              <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Preventive Care</h3>
+              <FileText className="h-8 w-8 text-primary mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">Symptom Q&A</h3>
               <p className="text-sm text-muted-foreground">
-                Get recommendations for preventing future disease outbreaks
+                Describe symptoms for detailed analysis and diagnosis
               </p>
             </CardContent>
           </Card>
@@ -685,6 +602,16 @@ const DiseaseDetection = () => {
               <h3 className="font-semibold mb-2">Organic Solutions</h3>
               <p className="text-sm text-muted-foreground">
                 Eco-friendly treatment options for sustainable farming
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card className="text-center">
+            <CardContent className="pt-6">
+              <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">Comprehensive Coverage</h3>
+              <p className="text-sm text-muted-foreground">
+                Covers fungal, bacterial, viral, nutrient, and pest issues
               </p>
             </CardContent>
           </Card>
