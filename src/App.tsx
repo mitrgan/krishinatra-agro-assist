@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import YieldPrediction from "./pages/YieldPrediction";
 import Recommendations from "./pages/Recommendations";
 import DiseaseDetection from "./pages/DiseaseDetection";
+import SoilAnalysis from "./pages/SoilAnalysis";
 import LanguageSelection from "./pages/LanguageSelection";
 import NotFound from "./pages/NotFound";
 import "./i18n";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/yield-prediction" element={<YieldPrediction />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/disease-detection" element={<DiseaseDetection />} />
+          <Route path="/soil-analysis" element={<SoilAnalysis />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
