@@ -12,6 +12,7 @@ import {
   TestTube 
 } from "lucide-react";
 import AppLogo from "@/components/AppLogo";
+import dashboardHero from "@/assets/dashboard-hero.jpg";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -68,14 +69,21 @@ const Dashboard = () => {
         <div className="flex justify-end mb-4">
           <LanguageSwitcher />
         </div>
-        <div className="text-center mb-12">
-          <AppLogo variant="card" className="mb-8" />
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            {t("welcome")} to Smart Farming
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t("welcome_message")}
-          </p>
+        <div className="relative rounded-2xl overflow-hidden mb-12 shadow-soft">
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${dashboardHero})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+          <div className="relative text-center py-20 px-4">
+            <AppLogo variant="hero" className="mb-8" />
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              {t("welcome")} to Smart Farming
+            </h1>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              {t("welcome_message")}
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
